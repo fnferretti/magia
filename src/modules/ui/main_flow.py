@@ -106,11 +106,11 @@ class MainFlow:
         header = ft.Container(
             content=ft.Row(
                 controls=[
-                    ft.Text("Estado", weight="bold", width=200, text_align=ft.TextAlign.CENTER, color=ft.colors.WHITE),
-                    ft.Text("Denominación", weight="bold", width=200, text_align=ft.TextAlign.CENTER, color=ft.colors.WHITE),
-                    ft.Text("Patente", weight="bold", width=200, text_align=ft.TextAlign.CENTER, color=ft.colors.WHITE),
-                    ft.Text("Documento", weight="bold", width=200, text_align=ft.TextAlign.CENTER, color=ft.colors.WHITE),
-                    ft.Text("Servicio", weight="bold", width=200, text_align=ft.TextAlign.CENTER, color=ft.colors.WHITE),
+                    ft.Text("Estado", weight="bold", width=200, text_align=ft.TextAlign.CENTER, color=ft.colors.WHITE), # type: ignore
+                    ft.Text("Denominación", weight="bold", width=200, text_align=ft.TextAlign.CENTER, color=ft.colors.WHITE), # type: ignore
+                    ft.Text("Patente", weight="bold", width=200, text_align=ft.TextAlign.CENTER, color=ft.colors.WHITE), # type: ignore
+                    ft.Text("Documento", weight="bold", width=200, text_align=ft.TextAlign.CENTER, color=ft.colors.WHITE), # type: ignore
+                    ft.Text("Servicio", weight="bold", width=200, text_align=ft.TextAlign.CENTER, color=ft.colors.WHITE), # type: ignore
                 ],
                 spacing=10,
                 alignment=ft.MainAxisAlignment.CENTER,
@@ -207,8 +207,8 @@ class MainFlow:
         """Display a welcome message and, if scrape_data is provided, a custom-styled table that scrolls
         only within the table area. The table is sorted by Estado in the order:
         Vencido, Pendiente, Esperando aprobación, and then Aprobado (sorted by days left ascending)."""
-        self.page.controls.clear()
-        content_controls = [ft.Text("¡Bienvenido!", size=30, weight="bold")]
+        self.page.controls.clear() # type: ignore
+        content_controls = [ft.Text("¡Bienvenido!", size=30, weight="bold")] # type: ignore
 
         if scrape_data:
             # Sort the data using the instance method self.sort_key.
@@ -219,7 +219,7 @@ class MainFlow:
                 height=1000,  # Fixed height for the table scroll area.
                 spacing=0
             )
-            content_controls.append(scrollable_table)
+            content_controls.append(scrollable_table) # type: ignore
 
         self.page.add(
             ft.Column(
