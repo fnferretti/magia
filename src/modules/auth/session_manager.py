@@ -1,32 +1,24 @@
-import asyncio
-from flet import Page
-from ..core.exceptions import SessionError
+import json
+import os
 
 class SessionManager:
-    def __init__(self, page: Page):
+    def __init__(self, page):
         self.page = page
-        
-    async def load_session(self) -> dict:
-        try:
-            return {
-                "email": await self.page.client_storage.get_async("email"),
-                "password": await self.page.client_storage.get_async("password"),
-                "keep_logged_in": await self.page.client_storage.get_async("keep_logged_in")
-            }
-        except Exception as e:
-            print(f"Error loading session: {e}")
-            return {}
+        self.session_file = "session.json"  # Adjust path as needed
 
-    async def save_session(self, credentials: dict):
-        try:
-            if credentials["keep_logged_in"]:
-                await self.page.client_storage.set_async("email", credentials["email"])
-                await self.page.client_storage.set_async("password", credentials["password"])
-                await self.page.client_stachent_storage.set_async("keep_logged_in", True) # type: ignore
-            else:
-                await self.clear_session()
-        except Exception as e:
-            raise SessionError(f"Failed to save session: {str(e)}")
+    async def load_session(self):
+        if os.path.exists(self.session_file):
+            with open(self.session_file, "r") as f:
+                encrypted = f.read()
+            # Decrypt the stored session.
+            from modules.auth.cryptography import decrypt_credentials  # adjust import as needed
+            session = decrypt_credentials(encrypted)
+            return session
+        return None
 
-    async def clear_session(self):
-        await self.page.client_storage.clear_async()
+    def save_session(self, session):
+        # Encrypt the session before saving.
+        from modules.auth.cryptography import encrypt_credentials  # adjust import as needed
+        encrypted = encrypt_credentials(session)
+        with open(self.session_file, "w") as f:
+            f.write(encrypted)
