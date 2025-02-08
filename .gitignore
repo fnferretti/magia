@@ -3,6 +3,8 @@ src/assets
 test.py
 ui_bak.py
 main_bak.py
+session_key.key
+session.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
