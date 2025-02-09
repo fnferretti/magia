@@ -224,29 +224,36 @@ class MainFlow:
         """Display a welcome message and, if scrape_data is provided, a custom-styled table that scrolls
         only within the table area. The table is sorted by Estado and its height is 80% of the window height."""
         self.page.controls.clear() # type: ignore
-        content_controls = [ft.Text("¡Bienvenido!", size=30, weight="bold")] # type: ignore
+        content_controls = [] # type: ignore
 
         if scrape_data:
-            TABLE_HEIGHT = self.page.window.height * 0.8 # type: ignore
-            # Sort and build table rows.
-            scrape_data.sort(key=self.sort_key)
-            table_rows = self._build_custom_table_rows(scrape_data)
-            # Create the scrollable table with initial height using self.page.window.height.
-            scrollable_table = ft.ListView(
-                controls=table_rows,
-                height = TABLE_HEIGHT,
-                spacing=0
-            )
-            content_controls.append(scrollable_table) # type: ignore
+            try:
+                TABLE_HEIGHT = 800 # type: ignore
+                # Sort and build table rows.
+                scrape_data.sort(key=self.sort_key) # type: ignore
+                table_rows = self._build_custom_table_rows(scrape_data)
+                # Create the scrollable table with initial height using self.page.window.height.
+                scrollable_table = ft.ListView(
+                    controls=table_rows,
+                    height = TABLE_HEIGHT,
+                    spacing=0
+                )
+                content_controls.append(scrollable_table) # type: ignore
+            except Exception as e:
+                show_error(self.page, str(e))
+
+        else:
+            show_error(self.page, "No scrape data")
 
             # Define the on_resized function to update the table height.
-            def on_resized(e):
-                scrollable_table.height = TABLE_HEIGHT
-                self.page.update()
+            # def on_resized(e):
+            #     scrollable_table.height = TABLE_HEIGHT
+            #     self.page.update()
 
             # Assign the handler.
-            self.page.on_resized = on_resized
+            # self.page.on_resized = on_resized
 
+        self.page.controls.clear() # type: ignore
         self.page.add(
             ft.Column(
                 controls=content_controls,
